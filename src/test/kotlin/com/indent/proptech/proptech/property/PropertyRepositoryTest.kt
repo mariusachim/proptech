@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 @DataJpaTest
-class PropertyRepositoryTests {
+class PropertyRepositoryTest {
 
     @Autowired
     lateinit var propertyRepository: PropertyRepository

@@ -1,22 +1,21 @@
 package com.indent.proptech.proptech.property
 
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class PropertyService(val propertyRepository: PropertyRepository) {
 
-    fun saveProperty(propertyData: PropertyData): PropertyData {
-        val stored = propertyRepository.saveAndFlush(
+    fun saveProperty(propertyData: PropertyData): UUID =
+        propertyRepository.saveAndFlush(
             Property(
                 name = propertyData.name,
                 address = propertyData.address,
             )
-        )
-        return stored.asPropertyData()
-    }
+        ).id ?: throw IllegalArgumentException("Property with name ${propertyData.name} not found")
 
-    private fun Property.asPropertyData(): PropertyData = PropertyData(
-        name = name,
-        address = address
-    )
+    fun getPropertyById(id: UUID): PropertyData =
+        propertyRepository.findById(id)
+            .map { PropertyData(name = it.name, address = it.address) }
+            .orElseThrow { NoSuchElementException("Property with id $id not found") }
 }
