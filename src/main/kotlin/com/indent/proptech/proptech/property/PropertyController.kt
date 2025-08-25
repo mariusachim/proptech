@@ -35,4 +35,10 @@ class PropertyController(@Autowired private val propertyService: PropertyService
     fun getPropertyById(@PathVariable id: UUID): ResponseEntity<PropertyData> =
         propertyService.getPropertyById(id)
             .let { status(OK).body(it) }
+
+    @GetMapping("")
+    fun getProperties(): ResponseEntity<List<PropertyData>> =
+        propertyService.getProperties()
+            .let { status(OK).body(it) }
+
 }

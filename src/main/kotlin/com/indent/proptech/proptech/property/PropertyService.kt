@@ -19,4 +19,9 @@ class PropertyService(val propertyRepository: PropertyRepository) {
         propertyRepository.findById(id)
             .map { PropertyData(name = it.name, address = it.address, description = it.description) }
             .orElseThrow { NoSuchElementException("Property with id $id not found") }
+
+    fun getProperties(): List<PropertyData> =
+        propertyRepository.findAll()
+            .map { PropertyData(name = it.name, address = it.address, description = it.description) }
+
 }
