@@ -1,6 +1,9 @@
 package com.indent.proptech.proptech.property
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.ResponseEntity
@@ -18,10 +21,12 @@ import java.util.*
 @RequestMapping("/properties")
 class PropertyController(@Autowired private val propertyService: PropertyService) {
 
+    private val logger: Logger = LoggerFactory.getLogger(PropertyController::class.java)
+
     @PostMapping
-    fun newProperty(@RequestBody property: PropertyData): ResponseEntity<UUID> =
+    fun newProperty(@RequestBody property: PropertyData) =
         propertyService.saveProperty(property)
-            .let { ResponseEntity.status(CREATED).body(it) }
+            .also { logger.info("Stored new property '{}'", it) }
 
     @GetMapping("/{id}")
     fun getPropertyById(@PathVariable id: UUID): ResponseEntity<PropertyData> =

@@ -37,7 +37,7 @@ class PropertyControllerTest(
             post("/properties")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req))
-        ).andExpect(status().isCreated)
+        ).andExpect(status().isOk)
             .andExpect(jsonPath("$").value(givenId.toString()))
     }
 
