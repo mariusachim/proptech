@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.status
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,12 +25,14 @@ class PropertyController(@Autowired private val propertyService: PropertyService
     private val logger: Logger = LoggerFactory.getLogger(PropertyController::class.java)
 
     @PostMapping
-    fun newProperty(@RequestBody property: PropertyData) =
+    fun newProperty(@RequestBody property: PropertyData): ResponseEntity<Void> {
         propertyService.saveProperty(property)
-            .also { logger.info("Stored new property '{}'", it) }
+            .also { logger.info("Stored new property with id {}", it) }
+        return status(CREATED).build()
+    }
 
     @GetMapping("/{id}")
     fun getPropertyById(@PathVariable id: UUID): ResponseEntity<PropertyData> =
         propertyService.getPropertyById(id)
-            .let { ResponseEntity.status(OK).body(it) }
+            .let { status(OK).body(it) }
 }
