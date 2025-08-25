@@ -21,8 +21,6 @@ RUN --mount=type=cache,target=/home/gradle/.gradle/caches \
     --mount=type=cache,target=/home/gradle/.gradle/wrapper \
     ./gradlew --no-daemon clean build
 
-RUN ./gradlew build --no-daemon
-
 # Run stage
 FROM eclipse-temurin:21-jre
 WORKDIR /app
