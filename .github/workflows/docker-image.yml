@@ -15,7 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Who am I?
-      uses: aws-actions/aws-cli-action@v2
       with:
         aws-region: us-east-1
         command: aws sts get-caller-identity
