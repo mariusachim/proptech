@@ -25,13 +25,6 @@ jobs:
       - name: Who am I?
         run: aws sts get-caller-identity
 
-      # Example: use aws cli
-      - name: List S3 buckets
-        uses: aws-actions/aws-cli-action@v4
-        with:
-          aws-region: us-east-1
-          command: s3 ls
-
       # Example: login to ECR and push an image
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
