@@ -11,11 +11,12 @@ class PropertyService(val propertyRepository: PropertyRepository) {
             Property(
                 name = propertyData.name,
                 address = propertyData.address,
+                description = propertyData.description,
             )
         ).id ?: throw IllegalArgumentException("Property with name ${propertyData.name} not found")
 
     fun getPropertyById(id: UUID): PropertyData =
         propertyRepository.findById(id)
-            .map { PropertyData(name = it.name, address = it.address) }
+            .map { PropertyData(name = it.name, address = it.address, description = it.description) }
             .orElseThrow { NoSuchElementException("Property with id $id not found") }
 }

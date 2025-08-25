@@ -14,8 +14,9 @@ data class Property(
     @Id @GeneratedValue(strategy = GenerationType.UUID) val id: UUID? = null,
 
     val name: String,
+    val address: String,
+    val description: String?,
 
-    val address: String
 ) {
-    constructor() : this(null, "", "")
+    constructor() : this(null, "", "", "")
 }

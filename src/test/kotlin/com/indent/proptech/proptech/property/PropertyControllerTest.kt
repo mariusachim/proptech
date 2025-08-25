@@ -28,7 +28,7 @@ class PropertyControllerTest(
     @Test
     fun `POST validates input and returns 201`() {
         // given
-        val req = PropertyData("Casa Nouă", "Bld. Eroilor 2")
+        val req = PropertyData("Casa Nouă", "Bld. Eroilor 2", null)
         val givenId = randomUUID()
         given(service.saveProperty(req)).willReturn(givenId)
 
@@ -44,7 +44,7 @@ class PropertyControllerTest(
     fun `GET property by ID returns 200 and property data`() {
         // given
         val propertyId = randomUUID()
-        val propertyData = PropertyData("Casa Nouă", "Bld. Eroilor 2")
+        val propertyData = PropertyData("Casa Nouă", "Bld. Eroilor 2", null)
         given(service.getPropertyById(propertyId)).willReturn(propertyData)
 
         // then

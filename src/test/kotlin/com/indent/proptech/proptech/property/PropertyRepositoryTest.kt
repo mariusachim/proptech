@@ -17,7 +17,8 @@ class PropertyRepositoryTest {
         val property =
             Property(
                 name = "aa",
-                address = "center street"
+                address = "center street",
+                description = null,
             )
 
         // when

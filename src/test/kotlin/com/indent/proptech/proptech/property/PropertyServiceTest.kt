@@ -20,7 +20,8 @@ class PropertyServiceTest {
         val uuid = randomUUID()
         val propertyData = PropertyData(
             name = "test",
-            address = "address"
+            address = "address",
+            description = "description"
         )
         given(
             propertyRepository.saveAndFlush(
@@ -30,7 +31,8 @@ class PropertyServiceTest {
             Property(
                 id = uuid,
                 name = propertyData.name,
-                address = propertyData.address
+                address = propertyData.address,
+                description = "description"
             )
         )
 
@@ -48,7 +50,8 @@ class PropertyServiceTest {
         val property = Property(
             id = uuid,
             name = "test",
-            address = "address"
+            address = "address",
+            description = "description"
         )
         given(propertyRepository.findById(uuid)).willReturn(of(property))
 
