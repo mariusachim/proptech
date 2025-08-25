@@ -2,24 +2,26 @@
 FROM gradle:8.14.3-jdk-21-and-24 AS build
 WORKDIR /app
 
-# Cache-friendly: copy Gradle files first
+# 1) Copy only files that affect dependency resolution to maximize layer cache hits
+COPY gradlew gradlew
 COPY gradle gradle
-COPY gradlew .
 COPY settings.gradle* .
 COPY build.gradle* .
 
-# Warm Gradle caches between runs using BuildKit cache mounts
-RUN --mount=type=cache,target=/home/gradle/.gradle/caches \
-    --mount=type=cache,target=/home/gradle/.gradle/wrapper \
-    ./gradlew --no-daemon build -x test || true
+# Make wrapper executable and normalize line endings (helps on macOS/Windows)
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
-# Now copy sources
+# 2) Warm Gradle caches (wrapper + dependencies) using BuildKit cache mounts
+#    - /root/.gradle is the Gradle user home
+RUN --mount=type=cache,target=/root/.gradle \
+    ./gradlew --no-daemon help
+
+# 3) Now bring in the rest of the sources
 COPY src src
 
-# Real build (often skip tests here; run them in a separate job)
-RUN --mount=type=cache,target=/home/gradle/.gradle/caches \
-    --mount=type=cache,target=/home/gradle/.gradle/wrapper \
-    ./gradlew --no-daemon clean build
+# 4) Build the runnable JAR (avoid 'clean' in CI to keep caches hot)
+RUN --mount=type=cache,target=/root/.gradle \
+    ./gradlew --no-daemon bootJar
 
 # Run stage
 FROM eclipse-temurin:21-jre
