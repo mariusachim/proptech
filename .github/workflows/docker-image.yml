@@ -1,27 +1,44 @@
-name: Docker Image CI
-
+name: Deploy
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+
+permissions:
+  id-token: write         # REQUIRED for OIDC
+  contents: read          # to checkout code
 
 jobs:
-
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Who am I?
-      with:
-        aws-region: us-east-1
-        command: aws sts get-caller-identity
-    - name: Configure AWS credentials (OIDC)
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::048643934642:role/GitHubActions-ECR-Push
-        aws-region: us-east-1
-    - name: Build the Docker image
-      run: docker buildx build -t 048643934642.dkr.ecr.us-east-1.amazonaws.com/proptech:latest-amd64  --push .
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Configure AWS credentials via OIDC
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::048643934642:role/GitHubActions-ECR-Push
+          aws-region: us-east-1
+
+      # (Optional) Verify identity
+      - name: Who am I?
+        run: aws sts get-caller-identity
+
+      # Example: use aws cli
+      - name: List S3 buckets
+        uses: aws-actions/aws-cli-action@v4
+        with:
+          aws-region: us-east-1
+          command: s3 ls
+
+      # Example: login to ECR and push an image
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & push image
+        env:
+          AWS_ACCOUNT_ID: 048643934642
+          AWS_REGION: us-east-1
+        run: |
+          docker buildx build -t 048643934642.dkr.ecr.us-east-1.amazonaws.com/proptech:latest-amd64  --push .
