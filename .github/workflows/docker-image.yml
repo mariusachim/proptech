@@ -28,9 +28,14 @@ jobs:
       # Example: login to ECR and push an image
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
-
+      
       - name: Build & push image
-        run: |
-          docker buildx build -t 048643934642.dkr.ecr.us-east-1.amazonaws.com/proptech:latest-amd64  --push .
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: 048643934642.dkr.ecr.us-east-1.amazonaws.com/proptech:latest-amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
