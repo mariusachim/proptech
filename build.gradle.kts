@@ -34,6 +34,7 @@ dependencies {
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.postgresql:postgresql:42.7.3") // latest stable driver as of 2025
 }
 
 dependencyManagement {
